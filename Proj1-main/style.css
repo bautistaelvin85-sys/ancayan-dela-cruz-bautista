@@ -316,7 +316,7 @@ button:focus-visible {
   transform: rotate(-3deg);
   text-shadow: 0.3px 0.3px 0 currentColor;
 }
-
+/*asd*/
 .product-stock[data-low],
 .stock.low {
   border-color: var(--stamp-red);
