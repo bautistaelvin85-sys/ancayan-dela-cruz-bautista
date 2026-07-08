@@ -1,0 +1,310 @@
+/* ==========================================================================
+   Product Manager — ledger-book aesthetic
+   A small inventory tool should feel like a tidy stockroom ledger:
+   paper background, ink type, a peso-green accent for money,
+   monospace figures for anything counted or priced.
+   ========================================================================== */
+
+:root {
+  --paper: #faf7f0;
+  --paper-line: #e4ddcc;
+  --ink: #23241f;
+  --ink-soft: #6b675a;
+  --peso: #2d6a4f;
+  --peso-dark: #1f4d38;
+  --amber: #e2963a;
+  --danger: #b5443a;
+
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius: 4px;
+  --shadow: 0 1px 2px rgba(35, 36, 31, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 2.5rem 1.5rem 5rem;
+  background: var(--paper);
+  background-image:
+    linear-gradient(var(--paper-line) 1px, transparent 1px);
+  background-size: 100% 2.25rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1 {
+  max-width: 640px;
+  margin: 0 auto 0.25rem;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.6rem;
+  background: var(--peso);
+  border-radius: 2px;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin: 0 0 1.1rem;
+}
+
+section {
+  max-width: 640px;
+  margin: 2rem auto 0;
+  background: #fffdf9;
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.75rem;
+}
+
+hr {
+  max-width: 640px;
+  margin: 0 auto;
+  border: none;
+  border-top: 1px dashed var(--paper-line);
+}
+
+/* -- form -- */
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+}
+
+label:last-of-type {
+  margin-bottom: 1.4rem;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input#price,
+input#stock {
+  font-family: var(--font-mono);
+}
+
+input::placeholder {
+  color: #a8a293;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--peso);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+input:focus-visible {
+  outline: 2px solid var(--peso);
+  outline-offset: 1px;
+}
+
+button {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.65rem 1.3rem;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button[onclick="saveProduct()"] {
+  background: var(--peso);
+  color: #fff;
+  margin-right: 0.6rem;
+}
+
+button[onclick="saveProduct()"]:hover {
+  filter: brightness(1.08);
+}
+
+button[onclick="clearForm()"] {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--paper-line);
+}
+
+button[onclick="clearForm()"]:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--peso);
+  outline-offset: 2px;
+}
+
+/* -- product list --
+   app.js can render each product as a .product-card; anything nested
+   inside inherits sensible defaults even without those exact classes. */
+
+#productList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#productList:empty::before {
+  content: 'No products yet — add one above to start the ledger.';
+  display: block;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  border: 1px dashed var(--paper-line);
+  border-radius: var(--radius);
+}
+
+.product-card,
+#productList > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--paper);
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius);
+}
+
+.product-name,
+.product-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.product-description,
+.product-card p {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.product-price,
+.product-card .price {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--peso-dark);
+  white-space: nowrap;
+}
+
+.product-price::before {
+  content: '₱';
+  margin-right: 0.1rem;
+  opacity: 0.7;
+}
+
+.product-stock,
+.product-card .stock {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(45, 106, 79, 0.12);
+  color: var(--peso-dark);
+  white-space: nowrap;
+}
+
+.product-stock[data-low],
+.stock.low {
+  background: rgba(181, 68, 58, 0.12);
+  color: var(--danger);
+}
+
+.product-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.product-actions button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.78rem;
+}
+
+.product-actions .edit {
+  background: var(--amber);
+  color: #fff;
+}
+
+.product-actions .delete {
+  background: transparent;
+  color: var(--danger);
+  border-color: rgba(181, 68, 58, 0.3);
+}
+
+/* -- responsive -- */
+
+@media (max-width: 480px) {
+  body {
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  h1 {
+    font-size: 1.9rem;
+  }
+
+  section {
+    padding: 1.25rem;
+  }
+
+  .product-card,
+  #productList > div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* -- reduced motion -- */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
